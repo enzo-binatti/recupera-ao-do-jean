@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Acesso - Dark Mode</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --black: #121212;
+            --dark-gray: #1e1e1e;
+            --medium-gray: #2d2d2d;
+            --light-gray: #3d3d3d;
+            --lighter-gray: #e0e0e0;
+            --white: #ffffff;
+            --red: #ff3b30;
+            --dark-red: #d62c20;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background-color: var(--dark-gray);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--light-gray);
+        }
+
+        .form-container {
+            padding: 40px;
+            width: 100%;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Forms positioning */
+        .login-form {
+            transform: translateX(0);
+        }
+
+        .register-form {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(100%);
+        }
+
+        .forgot-form {
+            position: absolute;
+            top: 0;
+            left: 0;
+            transform: translateX(100%);
+        }
+
+        /* Active states */
+        .show-register .login-form {
+            transform: translateX(-100%);
+        }
+
+        .show-register .register-form {
+            transform: translateX(0);
+        }
+
+        .show-forgot .login-form {
+            transform: translateX(-100%);
+        }
+
+        .show-forgot .forgot-form {
+            transform: translateX(0);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 32px;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--white);
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--red);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--lighter-gray);
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 14px 16px 14px 42px;
+            background-color: var(--medium-gray);
+            border: 1px solid var(--light-gray);
+            border-radius: 8px;
+            font-size: 15px;
+            color: var(--white);
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            border-color: var(--red);
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(255, 59, 48, 0.2);
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 16px;
+            top: 40px;
+            color: var(--lighter-gray);
+            font-size: 16px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            background-color: var(--red);
+            color: var(--white);
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn:hover {
+            background-color: var(--dark-red);
+            transform: translateY(-1px);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--light-gray);
+            color: var(--lighter-gray);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--lighter-gray);
+        }
+
+        .form-footer {
+            text-align: center;
+            margin-top: 24px;
+            font-size: 14px;
+            color: var(--lighter-gray);
+        }
+
+        .form-footer a {
+            color: var(--red);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .form-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 24px 0;
+            color: var(--light-gray);
+            font-size: 13px;
+        }
+
+        .divider::before,
+        .divider::after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: var(--light-gray);
+        }
+
+        .divider::before {
+            margin-right: 16px;
+        }
+
+        .divider::after {
+            margin-left: 16px;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 14px;
+            display: none;
+        }
+
+        .alert-success {
+            background-color: rgba(40, 40, 40, 0.8);
+            border: 1px solid var(--light-gray);
+            color: var(--lighter-gray);
+            display: block;
+        }
+
+        .alert-error {
+            background-color: rgba(40, 0, 0, 0.8);
+            border: 1px solid var(--red);
+            color: var(--white);
+            display: block;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 16px;
+            top: 40px;
+            cursor: pointer;
+            color: var(--lighter-gray);
+            font-size: 16px;
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                border-radius: 0;
+                border: none;
+            }
+            
+            .form-container {
+                padding: 32px 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="auth-container" id="authContainer">
+        <!-- Login Form -->
+        <div class="form-container login-form">
+            <div class="logo">LOGO</div>
+            <h2>Faça seu login</h2>
+            
+            <div class="alert" id="loginAlert"></div>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail">E-mail</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="loginEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword">Senha</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    <i class="fas fa-eye password-toggle" id="toggleLoginPassword"></i>
+                </div>
+                <button type="submit" class="btn">Entrar</button>
+            </form>
+            
+            <div class="form-footer">
+                <a href="#" id="forgotPasswordLink">Esqueceu a senha?</a>
+                <p>Não tem conta? <a href="#" id="registerLink">Cadastre-se</a></p>
+            </div>
+            
+            <div class="divider">ou</div>
+            
+            <button class="btn btn-secondary">
+                <i class="fab fa-google"></i> Continuar com Google
+            </button>
+        </div>
+        
+        <!-- Register Form -->
+        <div class="form-container register-form">
+            <div class="logo">LOGO</div>
+            <h2>Criar nova conta</h2>
+            
+            <div class="alert" id="registerAlert"></div>
+            
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="registerName">Nome completo</label>
+                    <i class="fas fa-user input-icon"></i>
+                    <input type="text" id="registerName" placeholder="Seu nome" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerEmail">E-mail</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="registerEmail" placeholder="seu@email.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="registerPassword">Senha</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="registerPassword" placeholder="Mínimo 8 caracteres" required>
+                    <i class="fas fa-eye password-toggle" id="toggleRegisterPassword"></i>
+                </div>
+                <div class="form-group">
+                    <label for="registerConfirm">Confirmar senha</label>
+                    <i class="fas fa-lock input-icon"></i>
+                    <input type="password" id="registerConfirm" placeholder="Confirme sua senha" required>
+                    <i class="fas fa-eye password-toggle" id="toggleRegisterConfirm"></i>
+                </div>
+                <button type="submit" class="btn">Criar conta</button>
+            </form>
+            
+            <div class="form-footer">
+                <p>Já tem uma conta? <a href="#" id="loginLink">Faça login</a></p>
+            </div>
+        </div>
+        
+        <!-- Forgot Password Form -->
+        <div class="form-container forgot-form">
+            <div class="logo">LOGO</div>
+            <h2>Recuperar senha</h2>
+            
+            <div class="alert" id="forgotAlert"></div>
+            
+            <form id="forgotForm">
+                <div class="form-group">
+                    <label for="forgotEmail">E-mail cadastrado</label>
+                    <i class="fas fa-envelope input-icon"></i>
+                    <input type="email" id="forgotEmail" placeholder="seu@email.com" required>
+                </div>
+                <button type="submit" class="btn">Enviar link de recuperação</button>
+            </form>
+            
+            <div class="form-footer">
+                <a href="#" id="backToLoginLink">Voltar para o login</a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // DOM Elements
+        const authContainer = document.getElementById('authContainer');
+        const registerLink = document.getElementById('registerLink');
+        const loginLink = document.getElementById('loginLink');
+        const forgotPasswordLink = document.getElementById('forgotPasswordLink');
+        const backToLoginLink = document.getElementById('backToLoginLink');
+        
+        // Toggle password visibility
+        function setupPasswordToggle(passwordId, toggleId) {
+            const passwordInput = document.getElementById(passwordId);
+            const toggleIcon = document.getElementById(toggleId);
+            
+            toggleIcon.addEventListener('click', () => {
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    toggleIcon.classList.replace('fa-eye', 'fa-eye-slash');
+                } else {
+                    passwordInput.type = 'password';
+                    toggleIcon.classList.replace('fa-eye-slash', 'fa-eye');
+                }
+            });
+        }
+        
+        // Setup password toggles
+        setupPasswordToggle('loginPassword', 'toggleLoginPassword');
+        setupPasswordToggle('registerPassword', 'toggleRegisterPassword');
+        setupPasswordToggle('registerConfirm', 'toggleRegisterConfirm');
+        
+        // Toggle between forms
+        registerLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authContainer.classList.add('show-register');
+        });
+        
+        loginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authContainer.classList.remove('show-register');
+        });
+        
+        forgotPasswordLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authContainer.classList.add('show-forgot');
+        });
+        
+        backToLoginLink.addEventListener('click', (e) => {
+            e.preventDefault();
+            authContainer.classList.remove('show-forgot');
+        });
+        
+        // Form submissions
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // Simulate login
+            const alert = document.getElementById('loginAlert');
+            alert.textContent = 'Login realizado com sucesso!';
+            alert.className = 'alert alert-success';
+            
+            // Clear form
+            this.reset();
+            
+            // Hide message after 3 seconds
+            setTimeout(() => {
+                alert.className = 'alert';
+            }, 3000);
+        });
+        
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const name = document.getElementById('registerName').value;
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            const confirm = document.getElementById('registerConfirm').value;
+            
+            // Validate password match
+            if (password !== confirm) {
+                const alert = document.getElementById('registerAlert');
+                alert.textContent = 'As senhas não coincidem!';
+                alert.className = 'alert alert-error';
+                
+                setTimeout(() => {
+                    alert.className = 'alert';
+                }, 3000);
+                return;
+            }
+            
+            // Validate password length
+            if (password.length < 8) {
+                const alert = document.getElementById('registerAlert');
+                alert.textContent = 'A senha deve ter no mínimo 8 caracteres!';
+                alert.className = 'alert alert-error';
+                
+                setTimeout(() => {
+                    alert.className = 'alert';
+                }, 3000);
+                return;
+            }
+            
+            // Simulate registration
+            const alert = document.getElementById('registerAlert');
+            alert.textContent = 'Conta criada com sucesso!';
+            alert.className = 'alert alert-success';
+            
+            // Clear form
+            this.reset();
+            
+            // Hide message after 3 seconds and go back to login
+            setTimeout(() => {
+                alert.className = 'alert';
+                authContainer.classList.remove('show-register');
+            }, 3000);
+        });
+        
+        document.getElementById('forgotForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            
+            // Simulate password recovery
+            const alert = document.getElementById('forgotAlert');
+            alert.textContent = 'Link de recuperação enviado para seu e-mail!';
+            alert.className = 'alert alert-success';
+            
+            // Clear form
+            this.reset();
+            
+            // Hide message after 3 seconds and go back to login
+            setTimeout(() => {
+                alert.className = 'alert';
+                authContainer.classList.remove('show-forgot');
+            }, 3000);
+        });
+    </script>
+</body>
+</html>
