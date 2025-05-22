@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login & Cadastro</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      background-color: white;
+      width: 100%;
+      max-width: 400px;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    nav {
+      display: flex;
+      justify-content: space-around;
+      margin-bottom: 20px;
+    }
+
+    nav button {
+      background: none;
+      border: none;
+      color: #777;
+      font-weight: bold;
+      cursor: pointer;
+      position: relative;
+      padding: 10px;
+    }
+
+    nav button.active::after {
+      content: "";
+      position: absolute;
+      bottom: -5px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background-color: #667eea;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      color: #555;
+    }
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button.submit-btn {
+      width: 100%;
+      padding: 10px;
+      background-color: #667eea;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button.submit-btn:hover {
+      background-color: #5a67d8;
+    }
+
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <h2>Bem-vindo(a)</h2>
+    <nav>
+      <button class="tab active" data-tab="login">Login</button>
+      <button class="tab" data-tab="cadastro">Cadastro</button>
+      <button class="tab" data-tab="recuperar">Esqueceu?</button>
+    </nav>
+
+    <!-- Formulário de Login -->
+    <form id="login" class="form active">
+      <div class="form-group">
+        <label for="email-login">E-mail</label>
+        <input type="email" id="email-login" required />
+      </div>
+      <div class="form-group">
+        <label for="senha-login">Senha</label>
+        <input type="password" id="senha-login" required />
+      </div>
+      <button type="submit" class="submit-btn">Entrar</button>
+    </form>
+
+    <!-- Formulário de Cadastro -->
+    <form id="cadastro" class="form hidden">
+      <div class="form-group">
+        <label for="nome-cadastro">Nome</label>
+        <input type="text" id="nome-cadastro" required />
+      </div>
+      <div class="form-group">
+        <label for="email-cadastro">E-mail</label>
+        <input type="email" id="email-cadastro" required />
+      </div>
+      <div class="form-group">
+        <label for="senha-cadastro">Senha</label>
+        <input type="password" id="senha-cadastro" required />
+      </div>
+      <button type="submit" class="submit-btn">Cadastrar</button>
+    </form>
+
+    <!-- Formulário de Recuperação -->
+    <form id="recuperar" class="form hidden">
+      <div class="form-group">
+        <label for="email-recuperar">Digite seu E-mail</label>
+        <input type="email" id="email-recuperar" required />
+      </div>
+      <button type="submit" class="submit-btn">Recuperar Senha</button>
+    </form>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const forms = document.querySelectorAll('.form');
+
+    // Função para alternância das abas
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        const target = tab.dataset.tab;
+
+        // Remove classe ativa dos botões
+        tabs.forEach(t => t.classList.remove('active'));
+        tab.classList.add('active');
+
+        // Esconde todos os formulários
+        forms.forEach(form => form.classList.add('hidden'));
+
+        // Mostra o formulário selecionado
+        document.getElementById(target).classList.remove('hidden');
+      });
+    });
+
+    // Função para redirecionamento
+    function setupFormRedirect(formId) {
+      document.getElementById(formId).addEventListener('submit', function(e) {
+        e.preventDefault(); // Evita o envio real do formulário
+
+        // Validação simples (verifica se todos os campos estão preenchidos)
+        const form = this;
+        const inputs = form.querySelectorAll('input');
+        let allFilled = true;
+
+        inputs.forEach(input => {
+          if (!input.value.trim()) {
+            allFilled = false;
+          }
+        });
+
+        if (allFilled) {
+          // Se tudo estiver ok, redireciona
+          window.location.href = 'bem-vindo.html';
+        } else {
+          alert('Por favor, preencha todos os campos.');
+        }
+      });
+    }
+
+    // Aplica a função nos formulários de login e cadastro
+    setupFormRedirect('login');
+    setupFormRedirect('cadastro');
+  </script>
+</body>
+</html>
