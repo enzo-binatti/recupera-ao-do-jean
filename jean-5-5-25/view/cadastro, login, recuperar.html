@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Autenticação</title>
+    <style>
+        /* Estilos gerais */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: none;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 30px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .active {
+            display: block;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #2c3e50;
+        }
+        
+        /* Formulários */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        
+        /* Botões */
+        .btn {
+            padding: 12px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: block;
+            width: 100%;
+            text-align: center;
+            text-decoration: none;
+        }
+        
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        
+        .btn-secondary {
+            background-color: #e74c3c;
+            color: white;
+            margin-top: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: #c0392b;
+        }
+        
+        /* Links */
+        .auth-links {
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .auth-links a {
+            color: #3498db;
+            text-decoration: none;
+            margin: 0 10px;
+            cursor: pointer;
+        }
+        
+        .auth-links a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Mensagens */
+        .message {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+        }
+        
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+        }
+        
+        /* Página do usuário */
+        .user-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .user-info {
+            line-height: 1.6;
+        }
+        
+        .user-info p {
+            margin: 15px 0;
+        }
+        
+        /* Navegação */
+        .nav {
+            display: flex;
+            justify-content: center;
+            background-color: #2c3e50;
+            padding: 15px 0;
+        }
+        
+        .nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 15px;
+            cursor: pointer;
+        }
+        
+        .nav a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navegação -->
+    <div class="nav">
+        <a onclick="showSection('login-section')">Login</a>
+        <a onclick="showSection('register-section')">Cadastro</a>
+        <a onclick="showSection('recover-section')">Recuperar Senha</a>
+        <a onclick="showSection('user-section')">Área do Usuário</a>
+    </div>
+
+    <!-- Seção de Login -->
+    <div id="login-section" class="container active">
+        <h1>Login</h1>
+        <div id="login-message" class="message" style="display: none;"></div>
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="loginEmail">E-mail</label>
+                <input type="email" id="loginEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="loginSenha">Senha</label>
+                <input type="password" id="loginSenha" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Entrar</button>
+            <div class="auth-links">
+                <a onclick="showSection('register-section')">Criar conta</a>
+                <a onclick="showSection('recover-section')">Esqueci minha senha</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Seção de Cadastro -->
+    <div id="register-section" class="container">
+        <h1>Cadastro</h1>
+        <div id="register-message" class="message" style="display: none;"></div>
+        <form id="registerForm">
+            <div class="form-group">
+                <label for="registerNome">Nome Completo</label>
+                <input type="text" id="registerNome" required>
+            </div>
+            <div class="form-group">
+                <label for="registerEmail">E-mail</label>
+                <input type="email" id="registerEmail" required>
+            </div>
+            <div class="form-group">
+                <label for="registerSenha">Senha (mínimo 6 caracteres)</label>
+                <input type="password" id="registerSenha" required minlength="6">
+            </div>
+            <div class="form-group">
+                <label for="registerConfirmar">Confirmar Senha</label>
+                <input type="password" id="registerConfirmar" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Cadastrar</button>
+            <div class="auth-links">
+                <a onclick="showSection('login-section')">Já tem conta? Faça login</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Seção de Recuperação de Senha -->
+    <div id="recover-section" class="container">
+        <h1>Recuperar Senha</h1>
+        <div id="recover-message" class="message" style="display: none;"></div>
+        <form id="recoverForm">
+            <div class="form-group">
+                <label for="recoverEmail">E-mail</label>
+                <input type="email" id="recoverEmail" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Recuperar</button>
+            <div class="auth-links">
+                <a onclick="showSection('login-section')">Voltar para login</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Seção do Usuário -->
+    <div id="user-section" class="container">
+        <div class="user-header">
+            <h1>Bem-vindo, <span id="userName"></span>!</h1>
+            <button onclick="logout()" class="btn btn-secondary">Sair</button>
+        </div>
+        
+        <div class="user-info">
+            <p>E-mail: <span id="userEmail"></span></p>
+            <p>Último acesso: <span id="lastAccess"></span></p>
+        </div>
+    </div>
+
+    <script>
+        // Armazenamento de usuários (simulado)
+        let usuarios = JSON.parse(localStorage.getItem('usuarios')) || [];
+        let usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado'));
+
+        // Mostrar seção específica
+        function showSection(sectionId) {
+            // Esconde todas as seções
+            document.querySelectorAll('.container').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Mostra a seção solicitada
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Se for a área do usuário, verifica se está logado
+            if (sectionId === 'user-section') {
+                if (!usuarioLogado) {
+                    showMessage('login-message', 'Você precisa fazer login primeiro', 'error');
+                    showSection('login-section');
+                } else {
+                    document.getElementById('userName').textContent = usuarioLogado.nome;
+                    document.getElementById('userEmail').textContent = usuarioLogado.email;
+                    document.getElementById('lastAccess').textContent = new Date().toLocaleString();
+                }
+            }
+        }
+        
+        // Mostrar mensagens
+        function showMessage(elementId, message, type) {
+            const element = document.getElementById(elementId);
+            element.textContent = message;
+            element.className = `message ${type}`;
+            element.style.display = 'block';
+            
+            setTimeout(() => {
+                element.style.display = 'none';
+            }, 5000);
+        }
+        
+        // Cadastrar usuário
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nome = document.getElementById('registerNome').value;
+            const email = document.getElementById('registerEmail').value;
+            const senha = document.getElementById('registerSenha').value;
+            const confirmar = document.getElementById('registerConfirmar').value;
+            
+            if (senha !== confirmar) {
+                showMessage('register-message', 'As senhas não coincidem!', 'error');
+                return;
+            }
+            
+            if (usuarios.some(u => u.email === email)) {
+                showMessage('register-message', 'Este e-mail já está cadastrado!', 'error');
+                return;
+            }
+            
+            usuarios.push({ nome, email, senha });
+            localStorage.setItem('usuarios', JSON.stringify(usuarios));
+            
+            showMessage('register-message', 'Cadastro realizado com sucesso!', 'success');
+            document.getElementById('registerForm').reset();
+            setTimeout(() => showSection('login-section'), 2000);
+        });
+        
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const senha = document.getElementById('loginSenha').value;
+            
+            const usuario = usuarios.find(u => u.email === email && u.senha === senha);
+            
+            if (usuario) {
+                usuarioLogado = usuario;
+                localStorage.setItem('usuarioLogado', JSON.stringify(usuario));
+                document.getElementById('loginForm').reset();
+                showSection('user-section');
+            } else {
+                showMessage('login-message', 'E-mail ou senha incorretos!', 'error');
+            }
+        });
+        
+        // Recuperar senha
+        document.getElementById('recoverForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('recoverEmail').value;
+            
+            if (usuarios.some(u => u.email === email)) {
+                showMessage('recover-message', 'Instruções de recuperação enviadas para seu e-mail!', 'success');
+                document.getElementById('recoverForm').reset();
+                setTimeout(() => showSection('login-section'), 2000);
+            } else {
+                showMessage('recover-message', 'E-mail não encontrado!', 'error');
+            }
+        });
+        
+        // Logout
+        function logout() {
+            usuarioLogado = null;
+            localStorage.removeItem('usuarioLogado');
+            showSection('login-section');
+        }
+        
+        // Verifica se já está logado ao carregar a página
+        window.addEventListener('DOMContentLoaded', () => {
+            if (usuarioLogado) {
+                showSection('user-section');
+            } else {
+                showSection('login-section');
+            }
+        });
+    </script>
+</body>
+</html>
